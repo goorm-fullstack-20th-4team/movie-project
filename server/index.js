@@ -22,4 +22,8 @@ app.get("/api/movies/popular", async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+    res.send('Movie API 서버가 실행 중입니다.');
+  });
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
