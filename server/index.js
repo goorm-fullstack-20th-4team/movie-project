@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 app.get('/api/movies/:id', async (req, res) => {
   const movieId = req.params.id;
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.TMDB_KEY}&language=ko`);
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&language=ko`);
     const data = await response.json();
     res.json(data);
   } catch (err) {
