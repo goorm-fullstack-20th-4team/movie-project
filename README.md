@@ -19,7 +19,7 @@ URL: https://movie-project-1-a8lu.onrender.com/api/movies/popular
 
 - 영화 상세 정보 조회 (예시)
 GET /api/movies/:id
-URL 예시: https://movie-project-1-a8lu.onrender.com/api/movies/12345
+URL 예시: https://movie-project-1-a8lu.onrender.com/api/movies/299534
 
 ## 프론트엔드에서 사용 방법
 
