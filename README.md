@@ -1,36 +1,26 @@
-# Movie Project
+# Movie Project - Netflix Clone
 
-설명: 넷플릭스 클론 코딩
+TMDB API를 활용한 넷플릭스 스타일 영화 조회 웹 애플리케이션입니다.
 
-## 기술 스택
-- Backend: Node.js + Express
-- API: TMDB API
-- Frontend: 추가 필요
+##  Live Demo
+Frontend (Netlify)  
+https://bucolic-elf-9f49e3.netlify.app
 
-## 서버 주소
-서버는 Render에 배포, 기본 엔드포인트는 다음과 같습니다:
+Backend API (Render)  
 https://movie-project-1-a8lu.onrender.com
 
-## 사용 가능한 엔드포인트
+##  Stack
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js, Express
+- API: TMDB API
 
-- 인기 영화 조회
-GET /api/movies/popular
-URL: https://movie-project-1-a8lu.onrender.com/api/movies/popular
+##  API Endpoints
 
-- 영화 상세 정보 조회 (예시)
-GET /api/movies/:id
-URL 예시: https://movie-project-1-a8lu.onrender.com/api/movies/299534
+### 인기 영화 조회
+GET /api/movies/popular  
+https://movie-project-1-a8lu.onrender.com/api/movies/popular
 
-## 프론트엔드에서 사용 방법
-
-```javascript
-// 인기 영화 가져오기
-fetch('https://movie-project-1-a8lu.onrender.com/api/movies/popular')
-  .then(res => res.json())
-  .then(data => console.log(data));
-
-// 영화 상세 정보 가져오기
-fetch('https://movie-project-1-a8lu.onrender.com/api/movies/12345')
-  .then(res => res.json())
-  .then(data => console.log(data));
-
+### 영화 상세 정보 조회
+GET /api/movies/:id  
+예시:  
+https://movie-project-1-a8lu.onrender.com/api/movies/299534
