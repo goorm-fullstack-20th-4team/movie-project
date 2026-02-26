@@ -43,13 +43,9 @@
       margin: 20px;
     }
 
-    .row h2 {
-      margin-bottom: 10px;
-    }
-
     .posters {
       display: flex;
-      overflow-x: scroll;
+      overflow-x: auto;
       gap: 10px;
     }
 
@@ -120,7 +116,7 @@
 <div id="modal" class="modal hidden">
   <div class="modal-content">
     <span id="closeBtn">&times;</span>
-    <img id="modal-poster" />
+    <img id="modal-poster" alt="movie poster"/>
     <h2 id="modal-title"></h2>
     <p id="modal-overview"></p>
     <p><strong>개봉일:</strong> <span id="modal-date"></span></p>
@@ -129,64 +125,94 @@
 </div>
 
 <script>
-  const API_URL = "http://localhost:5000/api/movies/popular";
+  const API_BASE = "https://movie-project-1-a8lu.onrender.com";
 
   const hero = document.getElementById("hero");
   const row = document.getElementById("movieRow");
   const navbar = document.getElementById("navbar");
+  const modal = document.getElementById("modal");
+  const closeBtn = document.getElementById("closeBtn");
 
-  // 스크롤 시 navbar 검정색
   window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add("scrolled");
-    } else {
-      navbar.classList.remove("scrolled");
-    }
+    if (window.scrollY > 50) navbar.classList.add("scrolled");
+    else navbar.classList.remove("scrolled");
   });
 
   async function loadMovies() {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    const movies = data.results;
+    try {
+      const res = await fetch(`${API_BASE}/api/movies/popular`);
+      const data = await res.json();
+      const movies = data.results;
 
-    // HERO 배너
-    const heroMovie = movies[0];
-    hero.style.backgroundImage =
-      `url(https://image.tmdb.org/t/p/original${heroMovie.backdrop_path})`;
-    hero.innerHTML = `<h1>${heroMovie.title}</h1>`;
+      if (!movies || movies.length === 0) return;
 
-    // 포스터 리스트
-    movies.forEach(movie => {
-      const img = document.createElement("img");
-      img.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+      // HERO
+      const heroMovie = movies[0];
+      if (heroMovie.backdrop_path) {
+        hero.style.backgroundImage =
+          `url(https://image.tmdb.org/t/p/original${heroMovie.backdrop_path})`;
+      }
+      hero.innerHTML = `<h1>${heroMovie.title}</h1>`;
 
-      img.addEventListener("click", async () => {
-        const res = await fetch(
-          `http://localhost:5000/api/movies/\${movie.id}`
-        );
-        const detail = await res.json();
+      // 포스터
+      movies.forEach(movie => {
+        if (!movie.poster_path) return;
 
-        document.getElementById("modal-title").innerText = detail.title;
-        document.getElementById("modal-overview").innerText = detail.overview;
-        document.getElementById("modal-date").innerText = detail.release_date;
-        document.getElementById("modal-rating").innerText = detail.vote_average;
-        document.getElementById("modal-poster").src =
-          `https://image.tmdb.org/t/p/w500\${detail.poster_path}`;
+        const img = document.createElement("img");
+        img.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+        img.alt = movie.title;
 
-        document.getElementById("modal").classList.remove("hidden");
+        img.addEventListener("click", async () => {
+          try {
+            const res = await fetch(
+              `${API_BASE}/api/movies/${movie.id}`
+            );
+            const detail = await res.json();
+
+            document.getElementById("modal-title").innerText = detail.title;
+            document.getElementById("modal-overview").innerText = detail.overview;
+            document.getElementById("modal-date").innerText = detail.release_date;
+            document.getElementById("modal-rating").innerText = detail.vote_average;
+
+            const posterElement = document.getElementById("modal-poster");
+
+            if (detail.poster_path) {
+              posterElement.src =
+                `https://image.tmdb.org/t/p/w500${detail.poster_path}`;
+              posterElement.style.display = "block";
+            } else {
+              posterElement.style.display = "none";
+            }
+
+            modal.classList.remove("hidden");
+
+          } catch (err) {
+            console.error("상세 정보 로딩 실패:", err);
+          }
+        });
+
+        row.appendChild(img);
       });
 
-      row.appendChild(img);
-    });
+    } catch (err) {
+      console.error("영화 목록 로딩 실패:", err);
+    }
   }
 
-  document.getElementById("closeBtn").addEventListener("click", () => {
-    document.getElementById("modal").classList.add("hidden");
-  });
+  // 닫기 버튼
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+  };
+
+  // 바깥 클릭 닫기
+  window.onclick = (event) => {
+    if (event.target === modal) {
+      modal.classList.add("hidden");
+    }
+  };
 
   loadMovies();
 </script>
 
 </body>
 </html>
-
